@@ -5,7 +5,8 @@ let player;
 function onYouTubeIframeAPIReady() {
     const config = window.VALENTINE_CONFIG;
     // Extract video ID from URL in config
-    const videoId = config.music.musicUrl.split('v=')[1]?.split('&')[0] || config.music.musicUrl;
+    const url = config.music.musicUrl;
+    const videoId = url.includes('v=') ? url.split('v=')[1].split('&')[0] : url.split('/').pop().split('?')[0];
     
     player = new YT.Player('yt-player', {
         height: '0',
@@ -229,8 +230,6 @@ function createHeartExplosion() {
 function setupMusicPlayer() {
     const musicControls = document.getElementById('musicControls');
     const musicToggle = document.getElementById('musicToggle');
-    const bgMusic = document.getElementById('bgMusic');
-    const musicSource = document.getElementById('musicSource');
 
     // Only show controls if music is enabled in config
     if (!config.music.enabled) {

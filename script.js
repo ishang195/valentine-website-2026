@@ -213,30 +213,40 @@ function setupMusicPlayer() {
         return;
     }
 
-    // Set music source and volume
-    musicSource.src = config.music.musicUrl;
-    bgMusic.volume = config.music.volume || 0.5;
-    bgMusic.load();
-
-    // Try autoplay if enabled
-    if (config.music.autoplay) {
-        const playPromise = bgMusic.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(error => {
-                console.log("Autoplay prevented by browser");
-                musicToggle.textContent = config.music.startText;
-            });
-        }
+    let player;
+    function onYouTubeIframeAPIReady() {
+        // Extract video ID from URL in config
+        const videoId = config.music.musicUrl.split('v=')[1]?.split('&')[0] || config.music.musicUrl;
+        
+        player = new YT.Player('yt-player', {
+            height: '0',
+            width: '0',
+            videoId: videoId,
+            playerVars: {
+                'autoplay': config.music.autoplay ? 1 : 0,
+                'loop': 1,
+                'playlist': videoId
+            },
+            events: {
+                'onReady': (event) => {
+                    if (!config.music.enabled) {
+                        document.getElementById('musicControls').style.display = 'none';
+                    }
+                    event.target.setVolume(config.music.volume * 100);
+                }
+            }
+        });
     }
 
     // Toggle music on button click
-    musicToggle.addEventListener('click', () => {
-        if (bgMusic.paused) {
-            bgMusic.play();
-            musicToggle.textContent = config.music.stopText;
+    document.getElementById('musicToggle').addEventListener('click', () => {
+        const btn = document.getElementById('musicToggle');
+        if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+            player.pauseVideo();
+            btn.textContent = config.music.startText;
         } else {
-            bgMusic.pause();
-            musicToggle.textContent = config.music.startText;
+            player.playVideo();
+            btn.textContent = config.music.stopText;
         }
     });
 } 

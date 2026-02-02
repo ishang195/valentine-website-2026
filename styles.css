@@ -1,17 +1,17 @@
 /* CSS Variables - Will be updated by JavaScript */
 :root {
     /* Colors */
-    --background-color-1: #522258;
-    --background-color-2: #D95F59;
-    --button-color: #ff6b6b;
-    --button-hover: #FFE6C9;
-    --text-color: #8C3061;
+    background-color-1: #522258;
+    background-color-2: #D95F59;
+    button-color: #ff6b6b;
+    button-hover: #FFE6C9;
+    text-color: #9BC09C;
 
     /* Animations */
-    --float-duration: 15s;
-    --float-distance: 50px;
-    --bounce-speed: 0.5s;
-    --heart-explosion-size: 1.5;
+    float-duration: 15s;
+    float-distance: 50px;
+    bounce-speed: 0.5s;
+    heart-explosion-size: 1.5;
 }
 
 body {

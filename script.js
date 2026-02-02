@@ -1,6 +1,31 @@
 // Initialize configuration
 const config = window.VALENTINE_CONFIG;
+let player;
 
+function onYouTubeIframeAPIReady() {
+    const config = window.VALENTINE_CONFIG;
+    // Extract video ID from URL in config
+    const videoId = config.music.musicUrl.split('v=')[1]?.split('&')[0] || config.music.musicUrl;
+    
+    player = new YT.Player('yt-player', {
+        height: '0',
+        width: '0',
+        videoId: videoId,
+        playerVars: {
+            'autoplay': config.music.autoplay ? 1 : 0,
+            'loop': 1,
+            'playlist': videoId
+        },
+        events: {
+            'onReady': (event) => {
+                if (config.music.enabled) {
+                    document.getElementById('musicControls').style.display = 'block';
+                }
+                event.target.setVolume(config.music.volume * 100);
+            }
+        }
+    });
+}
 // Validate configuration
 function validateConfig() {
     const warnings = [];
@@ -211,31 +236,6 @@ function setupMusicPlayer() {
     if (!config.music.enabled) {
         musicControls.style.display = 'none';
         return;
-    }
-
-    let player;
-    function onYouTubeIframeAPIReady() {
-        // Extract video ID from URL in config
-        const videoId = config.music.musicUrl.split('v=')[1]?.split('&')[0] || config.music.musicUrl;
-        
-        player = new YT.Player('yt-player', {
-            height: '0',
-            width: '0',
-            videoId: videoId,
-            playerVars: {
-                'autoplay': config.music.autoplay ? 1 : 0,
-                'loop': 1,
-                'playlist': videoId
-            },
-            events: {
-                'onReady': (event) => {
-                    if (!config.music.enabled) {
-                        document.getElementById('musicControls').style.display = 'none';
-                    }
-                    event.target.setVolume(config.music.volume * 100);
-                }
-            }
-        });
     }
 
     // Toggle music on button click
